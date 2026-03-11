@@ -1,73 +1,117 @@
-# React + TypeScript + Vite
+# Flight Review Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A reviewer experience for M365 Copilot App feature flights that supports ship decisions, built with React, TypeScript, and Fluent UI v9.
 
-Currently, two official plugins are available:
+![Flight Dashboard](https://github.com/user-attachments/assets/66220f31-ee75-40c1-af51-c558e70641b9)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How to Run
 
-## React Compiler
+### Prerequisites
+- Node.js 18+
+- npm 9+
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Install & Start
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Build for Production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm run preview
+```
+
+## Feature Overview
+
+The Flight Review Tool provides a three-pane dashboard for reviewing M365 Copilot App feature flights and making ship decisions.
+
+### Three-Pane Layout
+- **Left pane** — Navigation menu (Dashboard, My Reviews, Settings)
+- **Center/Main** — Dashboard content area with flight table and summary cards
+- **Right pane** — Filter controls and Metrics column selector
+
+### Dashboard Page
+
+- **Summary cards** showing Total Flights, Running, Completed, and Pending Review counts
+- **Searchable flight table** — search by Flight ID, Flight Name, or Experimentation ID
+- **Sortable columns** — click any column header to sort ascending/descending
+- **Clickable flight names** — navigate to the Flight Detail page
+
+### Right Pane Controls
+
+#### Filters
+Filter the flight table by:
+- **Status** — Running, Completed, Paused, Pending Review
+- **Product Area** — Excel, OneDrive, Outlook, SharePoint, Teams, Word
+- **Team** — specific team names within each product area
+
+#### Metrics Selector
+Toggle which metric columns appear in the flight table:
+- Crash Rate *(default on)*
+- Error Rate *(default on)*
+- Latency P50 *(default on)*
+- Latency P99
+- DAU *(default on)*
+- Retention
+- NPS
+- Feature Adoption Rate
+
+### Flight Detail Page
+
+![Flight Detail Page](https://github.com/user-attachments/assets/e37edc6f-97a0-4086-a36e-259d46161d12)
+
+- **Breadcrumb** navigation back to the dashboard
+- **Flight ID** is a clickable external link to the actual flight URL
+- **Comprehensive flight info** in a structured 2-column grid (ID, Owner, Product Area, Team, Status, Dates)
+- **Description** section
+- **All metrics** displayed in a card grid
+- **Reviewer feedback** section with:
+  - Free-text feedback input
+  - Review decision with four options:
+    - Don't Ship
+    - Need More Info
+    - Ship with Exception
+    - Ship
+
+## Key Interactions
+
+| Interaction | Behavior |
+|---|---|
+| Type in search box | Filters table by Flight ID, Name, or Experimentation ID |
+| Click column header | Sorts table by that column (click again to reverse) |
+| Check Status/Product Area/Team filter | Narrows visible flights |
+| Check/uncheck metric in right pane | Adds/removes that metric column from the table |
+| Click flight name | Navigates to Flight Detail page |
+| Click Flight ID on detail page | Opens actual flight URL in new tab |
+| Click breadcrumb | Returns to dashboard |
+| Select decision + enter feedback + Submit | Saves review decision and feedback |
+
+## Project Structure
+
+```
+src/
+├── types/
+│   └── Flight.ts           # TypeScript interfaces
+├── data/
+│   └── mockData.ts         # 12 realistic sample flights
+├── components/
+│   ├── AppShell.tsx        # Three-pane layout wrapper
+│   ├── LeftNav.tsx         # Vertical navigation
+│   ├── RightPane.tsx       # Filter + Metrics host
+│   ├── FilterPanel.tsx     # Status/Area/Team checkboxes
+│   ├── MetricsSelector.tsx # Metric column toggles
+│   ├── SummaryCards.tsx    # Overview stat cards
+│   ├── SearchBar.tsx       # Flight search input
+│   ├── FlightTable.tsx     # Sortable data table
+│   └── ReviewForm.tsx      # Decision + feedback form
+├── pages/
+│   ├── Dashboard.tsx       # Main dashboard page
+│   └── FlightDetail.tsx    # Flight detail page
+├── App.tsx                 # React Router setup
+└── main.tsx                # Entry point
 ```

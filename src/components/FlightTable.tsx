@@ -132,8 +132,8 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights, selectedMetrics }) =
         aVal = a.metrics[metricKey];
         bVal = b.metrics[metricKey];
       } else {
-        aVal = (a as unknown as Record<string, unknown>)[sort.column] as string | number ?? '';
-        bVal = (b as unknown as Record<string, unknown>)[sort.column] as string | number ?? '';
+        aVal = ((a as unknown as Record<string, unknown>)[sort.column] as string | number) ?? '';
+        bVal = ((b as unknown as Record<string, unknown>)[sort.column] as string | number) ?? '';
       }
       if (aVal < bVal) return sort.direction === 'asc' ? -1 : 1;
       if (aVal > bVal) return sort.direction === 'asc' ? 1 : -1;

@@ -8,6 +8,8 @@ import {
   tokens,
   Divider,
   Link,
+  MessageBar,
+  MessageBarBody,
 } from '@fluentui/react-components';
 import { ArrowLeftRegular, OpenRegular } from '@fluentui/react-icons';
 import AppShell from '../components/AppShell';
@@ -168,6 +170,7 @@ const FlightDetail: React.FC = () => {
   const navigate = useNavigate();
   const styles = useStyles();
   const [flights, setFlights] = useState<Flight[]>(mockFlights);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   const flight = flights.find((f) => f.id === id);
 
@@ -185,7 +188,7 @@ const FlightDetail: React.FC = () => {
           : f
       )
     );
-    alert('Review submitted successfully!');
+    setReviewSubmitted(true);
   };
 
   if (!flight) {
@@ -301,6 +304,11 @@ const FlightDetail: React.FC = () => {
       {/* Review Form */}
       <div className={styles.section}>
         <Text className={styles.sectionTitle}>Review</Text>
+        {reviewSubmitted && (
+          <MessageBar intent="success" style={{ marginBottom: '16px' }}>
+            <MessageBarBody>Review submitted successfully!</MessageBarBody>
+          </MessageBar>
+        )}
         <ReviewForm flight={flight} onSubmit={handleReviewSubmit} />
       </div>
     </AppShell>
